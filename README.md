@@ -1,6 +1,6 @@
 # PrivacyPlugin
 
-An IntelliJ plugin built based on Privado
+An IntelliJ plugin built based on [Privado](https://github.com/Privado-Inc/privado)
 ## How to develop
 
 ```bash
