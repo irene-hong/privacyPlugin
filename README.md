@@ -1,7 +1,6 @@
 # PrivacyPlugin
 
-An IntelliJ plugin built based on Privado.
-
+An IntelliJ plugin built based on Privado
 ## How to develop
 
 ```bash
@@ -9,7 +8,7 @@ git clone https://github.com/irene-hong/privacyPlugin.git
 cd privacyPlugin
 git checkout -b YOUR_BRANCH_NAME
 ```
-After makeing changes and commit them by git, do this:
+After making changes and commits, do this:
 ```bash
 git branch # you should be in YOUR_BRANCH_NAME
 git push origin YOUR_BRANCH_NAME
