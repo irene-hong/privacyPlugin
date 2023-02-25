@@ -1,4 +1,6 @@
 package com.cmu.privacyplugin;
+import com.intellij.openapi.project.Project;
+
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -21,17 +23,61 @@ public class TerminalCommand {
 
 
     public boolean testCommand() {
-        String[] testCmd = System.getProperty("os.name").startsWith("Windows")
-                ? windowsCommandTest : macCommandTest;
-        System.out.println("Current OS: " + System.getProperty("os.name"));
-        StandardIo outputReader = runCommand(testCmd);
-        printTerminal(outputReader.stdout);
-        printTerminal(outputReader.stderr);
-        return true;
+        try {
+            String[] testCmd = System.getProperty("os.name").startsWith("Windows")
+                    ? windowsCommandTest : macCommandTest;
+            System.out.println("Current OS: " + System.getProperty("os.name"));
+            StandardIo outputReader = runCommand(testCmd);
+            printTerminal(outputReader.stdout);
+            printTerminal(outputReader.stderr);
+            return true;
+        } catch (Exception e) {
+            System.out.println("Error occurs while running command test.");
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+
+    public void scan(Project project) {
+        String projectPath = project.getBasePath();
+        System.out.println("Scan project: " + project.getName());
+        System.out.println("Project base path: " + project.getBasePath());
+
+
+        String[] scanCmd = new String[]{"privado", "scan", projectPath, "--overwrite"};
+        // --overwrite: If specified, the warning prompt for existing scan results
+        // is disabled and any existing results are overwritten
+
+        runCommandRealtime(scanCmd);
+    }
+
+    public void runCommandRealtime(String[] cmdArray) {
+        // ref: https://stackoverflow.com/questions/58272702/get-process-output-in-real-time-with-java
+        try {
+            System.out.println("**Executing: " + String.join(" ", cmdArray));
+
+            // Create the process builder and set the command
+            ProcessBuilder processBuilder = new ProcessBuilder();
+            processBuilder.command(cmdArray);
+            Process process = processBuilder.start();
+
+            // print output in real time
+            try(InputStreamReader isr = new InputStreamReader(process.getInputStream())) {
+                int c;
+                while((c = isr.read()) >= 0) {
+                    System.out.print((char) c);
+                    System.out.flush();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public StandardIo runCommand(String[] cmdArray) {
         try {
+            System.out.println("**Executing: " + String.join(" ", cmdArray));
             // Create the process builder and set the command
             ProcessBuilder processBuilder = new ProcessBuilder();
             processBuilder.command(cmdArray);
