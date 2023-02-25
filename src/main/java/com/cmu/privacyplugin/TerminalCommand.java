@@ -40,25 +40,39 @@ public class TerminalCommand {
 
 
     public void scan(Project project) {
-        // TODO: dynamically fetch open project path
-        System.out.println(project.getBasePath());
         String projectPath = project.getBasePath();
-        System.out.println(project.getName());
-//        String[] cdCmd = new String[]{"cd", project.getBasePath()};
-//
-//        outputReader = runCommand(cdCmd);
-//        printTerminal(outputReader.stdout);
-//        printTerminal(outputReader.stderr);
-//        testCommand();
+        System.out.println("Scan project: " + project.getName());
+        System.out.println("Project base path: " + project.getBasePath());
 
 
         String[] scanCmd = new String[]{"privado", "scan", projectPath, "--overwrite"};
         // --overwrite: If specified, the warning prompt for existing scan results
         // is disabled and any existing results are overwritten
-        StandardIo outputReader = runCommand(scanCmd);
-        printTerminal(outputReader.stdout);
-        printTerminal(outputReader.stderr);
 
+        runCommandRealtime(scanCmd);
+    }
+
+    public void runCommandRealtime(String[] cmdArray) {
+        // ref: https://stackoverflow.com/questions/58272702/get-process-output-in-real-time-with-java
+        try {
+            System.out.println("**Executing: " + String.join(" ", cmdArray));
+
+            // Create the process builder and set the command
+            ProcessBuilder processBuilder = new ProcessBuilder();
+            processBuilder.command(cmdArray);
+            Process process = processBuilder.start();
+
+            // print output in real time
+            try(InputStreamReader isr = new InputStreamReader(process.getInputStream())) {
+                int c;
+                while((c = isr.read()) >= 0) {
+                    System.out.print((char) c);
+                    System.out.flush();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public StandardIo runCommand(String[] cmdArray) {

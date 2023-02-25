@@ -18,7 +18,6 @@ public class PopupDialogAction extends AnAction {
         if (!terminal.testCommand()) {
             return;
         }
-        System.out.println("==========");
         terminal.scan(event.getProject());
     }
 
