@@ -15,8 +15,14 @@ public class PopupDialogAction extends AnAction {
         // Using the event, implement an action.
         // For example, create and show a dialog.
         TerminalCommand terminal = new TerminalCommand();
-        terminal.testCommand();
+        if (!terminal.testCommand()) {
+            return;
+        }
+        System.out.println("==========");
+        terminal.scan(event.getProject());
     }
+
+
 
     // Override getActionUpdateThread() when you target 2022.3 or later!
 
