@@ -5,7 +5,6 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-
 public class TerminalCommand {
     final String[] windowsCommandTest = new String[]{"cmd", "/c", "dir"};
     final String[] macCommandTest = new String[]{"pwd"};
@@ -45,9 +44,20 @@ public class TerminalCommand {
         System.out.println("Project base path: " + project.getBasePath());
 
 
+        if(System.getProperty("os.name").startsWith("Windows")){
+            projectPath = "/mnt/" + projectPath.substring(0,1).toLowerCase()  +
+                    projectPath.substring(2);
+        }
         String[] scanCmd = new String[]{"privado", "scan", projectPath, "--overwrite"};
         // --overwrite: If specified, the warning prompt for existing scan results
         // is disabled and any existing results are overwritten
+
+        if(System.getProperty("os.name").startsWith("Windows")){
+            System.out.println("Please make sure Docker running and wsl installed.");
+            System.out.println("Run \ncurl -o- https://raw.githubusercontent.com/Privado-Inc/privado-cli/main/install.sh" +
+                    " | bash\n to install privado");
+            scanCmd = new String[]{"wsl", "/home/chenlyu/.privado/bin/privado", "scan", projectPath, "--overwrite"};
+        }
 
         runCommandRealtime(scanCmd);
     }
@@ -59,6 +69,7 @@ public class TerminalCommand {
 
             // Create the process builder and set the command
             ProcessBuilder processBuilder = new ProcessBuilder();
+            processBuilder.redirectErrorStream(true);
             processBuilder.command(cmdArray);
             Process process = processBuilder.start();
 
