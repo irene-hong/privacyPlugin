@@ -18,7 +18,11 @@ import com.intellij.openapi.editor.colors.EditorColors;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 
+<<<<<<< HEAD
 
+=======
+import java.awt.*;
+>>>>>>> 6f80d8e (highlight and part of json reading)
 
 public class TerminalCommand {
     final String[] windowsCommandTest = new String[]{"cmd", "/c", "dir"};
@@ -55,7 +59,10 @@ public class TerminalCommand {
 
     public void highlightLine(Project project, String filePath, int lineNumber) {
         // Get the editor for the file
+<<<<<<< HEAD
         System.out.println("====filepath: " + filePath);
+=======
+>>>>>>> 6f80d8e (highlight and part of json reading)
         VirtualFile file = LocalFileSystem.getInstance().findFileByPath(filePath);
         Editor editor = FileEditorManager.getInstance(project).openTextEditor(new OpenFileDescriptor(project, file), true);
 
@@ -73,6 +80,7 @@ public class TerminalCommand {
         FileDocumentManager.getInstance().saveDocument(editor.getDocument());
     }
 
+<<<<<<< HEAD
     /**
      * Call "privado scan" command to scan the currently opened project.
      * By default, it will overwrite any existing result.
@@ -82,6 +90,8 @@ public class TerminalCommand {
      *
      * @param project
      */
+=======
+>>>>>>> 6f80d8e (highlight and part of json reading)
     public void scan(Project project) {
         String projectPath = project.getBasePath();
         System.out.println("Scan project: " + project.getName());
