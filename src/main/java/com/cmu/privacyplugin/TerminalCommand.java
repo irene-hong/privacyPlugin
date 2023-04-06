@@ -18,7 +18,7 @@ import com.intellij.openapi.editor.colors.EditorColors;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 
-
+import java.awt.*;
 
 public class TerminalCommand {
     final String[] windowsCommandTest = new String[]{"cmd", "/c", "dir"};
@@ -55,7 +55,6 @@ public class TerminalCommand {
 
     public void highlightLine(Project project, String filePath, int lineNumber) {
         // Get the editor for the file
-        System.out.println("====filepath: " + filePath);
         VirtualFile file = LocalFileSystem.getInstance().findFileByPath(filePath);
         Editor editor = FileEditorManager.getInstance(project).openTextEditor(new OpenFileDescriptor(project, file), true);
 
