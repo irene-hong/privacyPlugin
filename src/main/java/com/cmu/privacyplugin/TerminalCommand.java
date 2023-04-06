@@ -4,6 +4,21 @@ import com.intellij.openapi.project.Project;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.editor.markup.HighlighterLayer;
+import com.intellij.openapi.editor.markup.HighlighterTargetArea;
+import com.intellij.openapi.editor.markup.MarkupModel;
+import com.intellij.openapi.editor.markup.RangeHighlighter;
+import com.intellij.openapi.fileEditor.FileDocumentManager;
+import com.intellij.openapi.fileEditor.FileEditorManager;
+import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.editor.colors.EditorColors;
+
+import com.intellij.openapi.vfs.LocalFileSystem;
+import com.intellij.openapi.vfs.VirtualFile;
+
+import java.awt.*;
 
 public class TerminalCommand {
     final String[] windowsCommandTest = new String[]{"cmd", "/c", "dir"};
@@ -37,6 +52,25 @@ public class TerminalCommand {
         }
     }
 
+
+    public void highlightLine(Project project, String filePath, int lineNumber) {
+        // Get the editor for the file
+        VirtualFile file = LocalFileSystem.getInstance().findFileByPath(filePath);
+        Editor editor = FileEditorManager.getInstance(project).openTextEditor(new OpenFileDescriptor(project, file), true);
+
+        // Highlight the specified line
+        MarkupModel markupModel = editor.getMarkupModel();
+        int startOffset = editor.getDocument().getLineStartOffset(lineNumber - 1);
+        int endOffset = editor.getDocument().getLineEndOffset(lineNumber + 1);
+        //RangeHighlighter highlighter = markupModel.addRangeHighlighter(startOffset, endOffset, HighlighterLayer.ERROR, null, HighlighterTargetArea.EXACT_RANGE);
+
+        // Change the highlighter's color
+        markupModel.addRangeHighlighter(startOffset, endOffset, HighlighterLayer.SELECTION - 1,
+                editor.getColorsScheme().getAttributes(EditorColors.SEARCH_RESULT_ATTRIBUTES), HighlighterTargetArea.EXACT_RANGE);
+
+        // Save the changes
+        FileDocumentManager.getInstance().saveDocument(editor.getDocument());
+    }
 
     public void scan(Project project) {
         String projectPath = project.getBasePath();
