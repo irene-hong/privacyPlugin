@@ -64,6 +64,25 @@ public class TerminalCommand {
      *
      * @param project
      */
+    public void highlightLine(Project project, String filePath, int lineNumber) {
+        // Get the editor for the file
+        VirtualFile file = LocalFileSystem.getInstance().findFileByPath(filePath);
+        Editor editor = FileEditorManager.getInstance(project).openTextEditor(new OpenFileDescriptor(project, file), true);
+
+        // Highlight the specified line
+        MarkupModel markupModel = editor.getMarkupModel();
+        int startOffset = editor.getDocument().getLineStartOffset(lineNumber - 1);
+        int endOffset = editor.getDocument().getLineEndOffset(lineNumber + 1);
+        //RangeHighlighter highlighter = markupModel.addRangeHighlighter(startOffset, endOffset, HighlighterLayer.ERROR, null, HighlighterTargetArea.EXACT_RANGE);
+
+        // Change the highlighter's color
+        markupModel.addRangeHighlighter(startOffset, endOffset, HighlighterLayer.SELECTION - 1,
+                editor.getColorsScheme().getAttributes(EditorColors.SEARCH_RESULT_ATTRIBUTES), HighlighterTargetArea.EXACT_RANGE);
+
+        // Save the changes
+        FileDocumentManager.getInstance().saveDocument(editor.getDocument());
+    }
+
     public void scan(Project project) {
         String projectPath = project.getBasePath();
         System.out.println("Scan project: " + project.getName());
