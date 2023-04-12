@@ -18,7 +18,7 @@ import com.intellij.openapi.editor.colors.EditorColors;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 
-import java.awt.*;
+
 
 public class TerminalCommand {
     final String[] windowsCommandTest = new String[]{"cmd", "/c", "dir"};
