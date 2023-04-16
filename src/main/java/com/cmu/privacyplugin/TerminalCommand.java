@@ -55,6 +55,7 @@ public class TerminalCommand {
 
     public void highlightLine(Project project, String filePath, int lineNumber) {
         // Get the editor for the file
+        System.out.println("====filepath: " + filePath);
         VirtualFile file = LocalFileSystem.getInstance().findFileByPath(filePath);
         Editor editor = FileEditorManager.getInstance(project).openTextEditor(new OpenFileDescriptor(project, file), true);
 
@@ -72,6 +73,15 @@ public class TerminalCommand {
         FileDocumentManager.getInstance().saveDocument(editor.getDocument());
     }
 
+    /**
+     * Call "privado scan" command to scan the currently opened project.
+     * By default, it will overwrite any existing result.
+     *
+     * This local version requires users to have Docker installed and opened
+     * while using the plugin.
+     *
+     * @param project
+     */
     public void scan(Project project) {
         String projectPath = project.getBasePath();
         System.out.println("Scan project: " + project.getName());
@@ -82,6 +92,7 @@ public class TerminalCommand {
             projectPath = "/mnt/" + projectPath.substring(0,1).toLowerCase()  +
                     projectPath.substring(2);
         }
+
         String[] scanCmd = new String[]{"privado", "scan", projectPath, "--overwrite"};
         // --overwrite: If specified, the warning prompt for existing scan results
         // is disabled and any existing results are overwritten
@@ -96,6 +107,11 @@ public class TerminalCommand {
         runCommandRealtime(scanCmd);
     }
 
+    /**
+     * Execute command specified in cmdArray, and print the output
+     * in terminal in real-time.
+     * @param cmdArray
+     */
     public void runCommandRealtime(String[] cmdArray) {
         // ref: https://stackoverflow.com/questions/58272702/get-process-output-in-real-time-with-java
         try {
@@ -115,11 +131,18 @@ public class TerminalCommand {
                     System.out.flush();
                 }
             }
+            System.out.println("**Execution completed**");
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    /**
+     * Execute command specified in cmdArray, and return the result
+     * as a StandardIo object. If you want to print output in realtime,
+     * use runCommandRealtime() instead.
+     * @param cmdArray
+     */
     public StandardIo runCommand(String[] cmdArray) {
         try {
             System.out.println("**Executing: " + String.join(" ", cmdArray));
