@@ -18,6 +18,12 @@ Then go to this git repo page, make a pull request, and notify your team.
 ## Usage
 Need documentation.
 
+## Troubleshooting for developers
+- I open this project with IntelliJ, but have trouble importing com.intellij.openai.* libraries
+Close IntelliJ, go the project folder and find a folder named `./idea`. 
+Delete this folder, and open project with IntelliJ again. Gradle will run initial setup automatically.
+After that, you should be able to see all libraries imported properly.
+
 
 ## Contributing
 
