@@ -55,6 +55,7 @@ public class TerminalCommand {
 
     public void highlightLine(Project project, String filePath, int lineNumber) {
         // Get the editor for the file
+        System.out.println("====filepath: " + filePath);
         VirtualFile file = LocalFileSystem.getInstance().findFileByPath(filePath);
         Editor editor = FileEditorManager.getInstance(project).openTextEditor(new OpenFileDescriptor(project, file), true);
 
@@ -72,7 +73,6 @@ public class TerminalCommand {
         FileDocumentManager.getInstance().saveDocument(editor.getDocument());
     }
 
-
     /**
      * Call "privado scan" command to scan the currently opened project.
      * By default, it will overwrite any existing result.
@@ -82,8 +82,6 @@ public class TerminalCommand {
      *
      * @param project
      */
-
-
     public void scan(Project project) {
         String projectPath = project.getBasePath();
         System.out.println("Scan project: " + project.getName());
