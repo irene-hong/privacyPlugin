@@ -4,6 +4,21 @@ import com.intellij.openapi.project.Project;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.editor.markup.HighlighterLayer;
+import com.intellij.openapi.editor.markup.HighlighterTargetArea;
+import com.intellij.openapi.editor.markup.MarkupModel;
+import com.intellij.openapi.editor.markup.RangeHighlighter;
+import com.intellij.openapi.fileEditor.FileDocumentManager;
+import com.intellij.openapi.fileEditor.FileEditorManager;
+import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.editor.colors.EditorColors;
+
+import com.intellij.openapi.vfs.LocalFileSystem;
+import com.intellij.openapi.vfs.VirtualFile;
+
+
 
 public class TerminalCommand {
     final String[] windowsCommandTest = new String[]{"cmd", "/c", "dir"};
@@ -38,6 +53,35 @@ public class TerminalCommand {
     }
 
 
+    public void highlightLine(Project project, String filePath, int lineNumber) {
+        // Get the editor for the file
+        System.out.println("====filepath: " + filePath);
+        VirtualFile file = LocalFileSystem.getInstance().findFileByPath(filePath);
+        Editor editor = FileEditorManager.getInstance(project).openTextEditor(new OpenFileDescriptor(project, file), true);
+
+        // Highlight the specified line
+        MarkupModel markupModel = editor.getMarkupModel();
+        int startOffset = editor.getDocument().getLineStartOffset(lineNumber - 1);
+        int endOffset = editor.getDocument().getLineEndOffset(lineNumber + 1);
+        //RangeHighlighter highlighter = markupModel.addRangeHighlighter(startOffset, endOffset, HighlighterLayer.ERROR, null, HighlighterTargetArea.EXACT_RANGE);
+
+        // Change the highlighter's color
+        markupModel.addRangeHighlighter(startOffset, endOffset, HighlighterLayer.SELECTION - 1,
+                editor.getColorsScheme().getAttributes(EditorColors.SEARCH_RESULT_ATTRIBUTES), HighlighterTargetArea.EXACT_RANGE);
+
+        // Save the changes
+        FileDocumentManager.getInstance().saveDocument(editor.getDocument());
+    }
+
+    /**
+     * Call "privado scan" command to scan the currently opened project.
+     * By default, it will overwrite any existing result.
+     *
+     * This local version requires users to have Docker installed and opened
+     * while using the plugin.
+     *
+     * @param project
+     */
     public void scan(Project project) {
         String projectPath = project.getBasePath();
         System.out.println("Scan project: " + project.getName());
@@ -48,6 +92,7 @@ public class TerminalCommand {
             projectPath = "/mnt/" + projectPath.substring(0,1).toLowerCase()  +
                     projectPath.substring(2);
         }
+
         String[] scanCmd = new String[]{"privado", "scan", projectPath, "--overwrite"};
         // --overwrite: If specified, the warning prompt for existing scan results
         // is disabled and any existing results are overwritten
@@ -62,6 +107,11 @@ public class TerminalCommand {
         runCommandRealtime(scanCmd);
     }
 
+    /**
+     * Execute command specified in cmdArray, and print the output
+     * in terminal in real-time.
+     * @param cmdArray
+     */
     public void runCommandRealtime(String[] cmdArray) {
         // ref: https://stackoverflow.com/questions/58272702/get-process-output-in-real-time-with-java
         try {
@@ -81,11 +131,18 @@ public class TerminalCommand {
                     System.out.flush();
                 }
             }
+            System.out.println("**Execution completed**");
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    /**
+     * Execute command specified in cmdArray, and return the result
+     * as a StandardIo object. If you want to print output in realtime,
+     * use runCommandRealtime() instead.
+     * @param cmdArray
+     */
     public StandardIo runCommand(String[] cmdArray) {
         try {
             System.out.println("**Executing: " + String.join(" ", cmdArray));
