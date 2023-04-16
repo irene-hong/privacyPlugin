@@ -55,6 +55,7 @@ public class TerminalCommand {
 
     public void highlightLine(Project project, String filePath, int lineNumber) {
         // Get the editor for the file
+        System.out.println("====filepath: " + filePath);
         VirtualFile file = LocalFileSystem.getInstance().findFileByPath(filePath);
         Editor editor = FileEditorManager.getInstance(project).openTextEditor(new OpenFileDescriptor(project, file), true);
 

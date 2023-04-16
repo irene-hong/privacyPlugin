@@ -52,11 +52,12 @@ public class PopupDialogAction extends AnAction {
             return;
         }
         terminal.scan(event.getProject());
+        System.out.println("===scan completed===");
         Editor editor = FileEditorManager.getInstance(event.getProject()).getSelectedTextEditor();
         VirtualFile file = FileDocumentManager.getInstance().getFile(editor.getDocument());
         String filePath = file.getPath();
         String basePath = event.getProject().getBasePath();
-        serialization(event);
+        deserialize(event);
         System.out.println(basePath+filenameStr.get(0).substring(9));
         System.out.println(filePath);
 
