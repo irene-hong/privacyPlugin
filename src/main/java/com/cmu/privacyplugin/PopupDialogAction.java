@@ -81,40 +81,21 @@ public class PopupDialogAction extends AnAction {
         deserialize(basePath);
 
         // get current open file
-        String openFilePath = projectModel.getCurrentOpenFile().getPath();
+//        String openFilePath = projectModel.getCurrentOpenFile().getPath();
 
-        for(int i = 0; i < filenameStr.size(); i++){
-            String currentPath = basePath + filenameStr.get(i).substring(9);
-            if (currentPath.equals(openFilePath)){
-                highlightLine(event.getProject(), openFilePath, lines.get(i));
-            }
-        }
+//        for(int i = 0; i < filenameStr.size(); i++){
+//            String currentPath = basePath + filenameStr.get(i).substring(9);
+//            if (currentPath.equals(openFilePath)){
+//                highlightLine(event.getProject(), openFilePath, lines.get(i));
+//            }
+//        }
 
-        projectModel.highLightTrace();
+        projectModel.highLightResult(filenameStr, lines);
 
     }
 
-    public void highlightLine(Project project, String filePath, int lineNumber) {
-        if (lineNumber < 0) {
-            return;
-        }
-        // Get the editor for the file
-        VirtualFile file = LocalFileSystem.getInstance().findFileByPath(filePath);
-        Editor editor = FileEditorManager.getInstance(project).openTextEditor(new OpenFileDescriptor(project, file), true);
 
-        // Highlight the specified line
-        MarkupModel markupModel = editor.getMarkupModel();
-        int startOffset = editor.getDocument().getLineStartOffset(lineNumber - 1);
-        int endOffset = editor.getDocument().getLineEndOffset(lineNumber + 1);
-        //RangeHighlighter highlighter = markupModel.addRangeHighlighter(startOffset, endOffset, HighlighterLayer.ERROR, null, HighlighterTargetArea.EXACT_RANGE);
 
-        // Change the highlighter's color
-        markupModel.addRangeHighlighter(startOffset, endOffset, HighlighterLayer.SELECTION - 1,
-                editor.getColorsScheme().getAttributes(EditorColors.SEARCH_RESULT_ATTRIBUTES), HighlighterTargetArea.EXACT_RANGE);
-
-        // Save the changes
-        FileDocumentManager.getInstance().saveDocument(editor.getDocument());
-    }
     private static void deserialize(String basePath) {
         System.out.println("===start deserialize===");
         try {
