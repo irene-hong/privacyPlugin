@@ -80,16 +80,6 @@ public class PopupDialogAction extends AnAction {
         // parse result, mapping to filenameStr and lines array list
         deserialize(basePath);
 
-        // get current open file
-//        String openFilePath = projectModel.getCurrentOpenFile().getPath();
-
-//        for(int i = 0; i < filenameStr.size(); i++){
-//            String currentPath = basePath + filenameStr.get(i).substring(9);
-//            if (currentPath.equals(openFilePath)){
-//                highlightLine(event.getProject(), openFilePath, lines.get(i));
-//            }
-//        }
-
         projectModel.highLightResult(filenameStr, lines);
 
     }
@@ -97,7 +87,6 @@ public class PopupDialogAction extends AnAction {
 
 
     private static void deserialize(String basePath) {
-        System.out.println("===start deserialize===");
         try {
             InputStream inputStream = Files.newInputStream(Path.of(basePath + "/.privado/privado.json").toAbsolutePath());
             JsonReader reader = new JsonReader(new InputStreamReader(inputStream));
@@ -113,7 +102,6 @@ public class PopupDialogAction extends AnAction {
                         for(int m = 0; m < path2s.size(); m++){
                             filenameStr.add(path2s.get(m).fileName);
                             lines.add(path2s.get(m).lineNumber);
-//                            System.out.println("detected filename: " + path2s.get(m).fileName + " in line " + path2s.get(m).lineNumber);
                         }
                     }
                 }
@@ -121,7 +109,6 @@ public class PopupDialogAction extends AnAction {
         } catch (Exception e) {
             System.out.println(e);
         }
-        System.out.println("===end deserialize===");
     }
 
     // Override getActionUpdateThread() when you target 2022.3 or later!

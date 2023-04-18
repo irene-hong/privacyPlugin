@@ -41,7 +41,6 @@ public class ProjectModel {
             // Do something with the file
             if (file != null && file.getName().contains(".java")) {
                 String currentFilePath = file.getOriginalFile().getVirtualFile().getPath();
-//                System.out.println("vfile path: " + currentFilePath);
                 if (filePaths.contains(currentFilePath)) {
                     int ind = filePaths.indexOf(currentFilePath);
                     highlightLine(filePaths.get(ind), detectedLines.get(ind));
@@ -70,6 +69,11 @@ public class ProjectModel {
         return filepaths;
     }
 
+    /**
+     * Highlight a specific line in a given file.
+     * @param filePath an absolute file path string
+     * @param lineNumber the line number to be highlighted
+     */
     public void highlightLine(String filePath, int lineNumber) {
         System.out.println("**highlight line " + lineNumber + " in " + filePath);
         if (lineNumber < 0) {
