@@ -39,7 +39,7 @@ public class PrivadoScanner {
                 public void run() {
                     // run privado scan to get results
                     TerminalCommand terminal = new TerminalCommand();
-                    terminal.scan(project);
+                    // terminal.scan(project);
                     // parse result, mapping to filenameStr and lines array list
                     String basePath = event.getProject().getBasePath();
                     lock.lock();
