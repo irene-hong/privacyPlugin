@@ -2,20 +2,20 @@ package com.cmu.privacyplugin;
 
 public class AccDataRegex {
     private String Id = "(?i).*(?:account|user|customer|doctor" +
-            "|patient|policyholder|insurer|claimant)[^\\s/(;)#|,=!>]{0,3}(id|number|no|num)";
-    private  String smLoginMod = "(?i)(?:facebook|twitter|instagram|linkedin|pinterest|behance|" +
-            "dribble)[^\\\\s/(;)#|,=!>]{0,2}(?:id|account|username|handle)";
+            "|patient|policyholder|insurer|claimant)[^\\s/(;)#|,=!>]{0,3}(id|number|no|num).*";
+    private  String smLoginMod = "(?i).*(?:facebook|twitter|instagram|linkedin|pinterest|behance|" +
+            "dribble)[^\\\\s/(;)#|,=!>]{0,2}(?:id|account|username|handle).*";
 
     private String languPref = "(?i).*language.*";
 
     private  String password = "(?i)(.*(?<!(db|database|jira|sql|postgres|mongo|aws)" +
-            "[^\\s/(;)#|,=!>]{0,3})(pwd|psw|pswd|password|passwrd))";
+            "[^\\s/(;)#|,=!>]{0,3})(pwd|psw|pswd|password|passwrd).*)";
 
-    private  String Mnemonic =  "(?i).*(mnemonic)";
+    private  String Mnemonic =  "(?i).*(mnemonic).*";
 
     private  String accName = "(?i)(.*(?<!(db|database|jira|sql|postgres|mongo|aws)[^\\s/(;)#|,=!>]" +
-            "{0,3})user[^\\s/(;)#|,=!>]{0,3}name)|(.*(account|customer|doctor|patient|" +
-            "teacher|student|person|organi[zs]ation|company)[^\\s/(;)#|,=!>]{0,3}name)";
+            "{0,3})user[^\\s/(;)#|,=!>]{0,3}name.*)|(.*(account|customer|doctor|patient|" +
+            "teacher|student|person|organi[zs]ation|company)[^\\s/(;)#|,=!>]{0,3}name.*)";
 
     public String getID(){
         return Id;
