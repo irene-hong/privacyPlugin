@@ -30,4 +30,9 @@
             <add-to-group group-id="ToolsMenu" anchor="first"/>
         </action>
     </actions>
+    <applicationListeners>
+        <listener
+                class="com.cmu.privacyplugin.MyListenerClass"
+                topic="com.intellij.openapi.vfs.newvfs.BulkFileListener"/>
+    </applicationListeners>
 </idea-plugin>
