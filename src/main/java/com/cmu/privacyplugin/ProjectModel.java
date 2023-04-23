@@ -119,8 +119,8 @@ public class ProjectModel {
 
         // set underline style
         final TextAttributes attr = new TextAttributes();
-        attr.setForegroundColor(JBColor.RED);
-        attr.setEffectColor(JBColor.RED);
+//        attr.setForegroundColor(JBColor.RED);
+        attr.setEffectColor(JBColor.GRAY);
         attr.setEffectType(EffectType.WAVE_UNDERSCORE);
 
         // Create a range highlighter for the line

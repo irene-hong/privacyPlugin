@@ -2,6 +2,7 @@ package com.cmu.privacyplugin;
 
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
+import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
@@ -19,10 +20,10 @@ public class PrivadoScanner {
     Project project;
     static ArrayList<String> filenameStr = new ArrayList<String>();
     static ArrayList<Integer> lines = new ArrayList<Integer>();
-    PopupDialogAction actionCallback;
+    AnAction actionCallback;
     private Lock lock = new ReentrantLock();
 
-    PrivadoScanner(AnActionEvent event, PopupDialogAction action) {
+    PrivadoScanner(AnActionEvent event, AnAction action) {
         this.event = event;
         this.project = this.event.getProject();
         this.actionCallback = action;
@@ -53,7 +54,7 @@ public class PrivadoScanner {
                     ApplicationManager.getApplication().invokeLater(() -> {
                         lock.lock();
                         try {
-                            actionCallback.scanComplete(filenameStr, lines);
+                            ((PrivacyCheckAction) actionCallback).scanComplete(filenameStr, lines);
                         } finally {
                             lock.unlock();
                         }
