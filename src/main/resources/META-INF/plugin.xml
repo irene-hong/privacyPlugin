@@ -25,9 +25,13 @@
 
     </extensions>
     <actions>
-        <action id="com.cmu.privacyplugin.PopupDialogAction" class="com.cmu.privacyplugin.PopupDialogAction"
+        <action id="com.cmu.privacyplugin.PrivacyCheckAction" class="com.cmu.privacyplugin.PrivacyCheckAction"
                 text="Popup">
             <add-to-group group-id="ToolsMenu" anchor="first"/>
+        </action>
+        <action id="com.cmu.privacyplugin.PrivacyUncheckAction" class="com.cmu.privacyplugin.PrivacyUncheckAction"
+                text="Popup">
+            <add-to-group group-id="ToolsMenu" anchor="after" relative-to-action="com.cmu.privacyplugin.PrivacyCheckAction"/>
         </action>
     </actions>
     <applicationListeners>
