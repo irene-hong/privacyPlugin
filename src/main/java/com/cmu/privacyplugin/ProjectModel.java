@@ -1,22 +1,25 @@
 package com.cmu.privacyplugin;
 
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.editor.colors.EditorColors;
-import com.intellij.openapi.editor.markup.HighlighterLayer;
-import com.intellij.openapi.editor.markup.HighlighterTargetArea;
-import com.intellij.openapi.editor.markup.MarkupModel;
+import com.intellij.openapi.editor.highlighter.EditorHighlighter;
+import com.intellij.openapi.editor.highlighter.EditorHighlighterFactory;
+import com.intellij.openapi.editor.markup.*;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ProjectFileIndex;
+import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
+import com.intellij.ui.JBColor;
 import org.jetbrains.annotations.NotNull;
 
+import java.awt.*;
 import java.util.ArrayList;
 
 public class ProjectModel {
@@ -92,6 +95,37 @@ public class ProjectModel {
         // Change the highlighter's color
         markupModel.addRangeHighlighter(startOffset, endOffset, HighlighterLayer.SELECTION - 1,
                 editor.getColorsScheme().getAttributes(EditorColors.SEARCH_RESULT_ATTRIBUTES), HighlighterTargetArea.EXACT_RANGE);
+
+        // Save the changes
+        FileDocumentManager.getInstance().saveDocument(editor.getDocument());
+    }
+
+    public static void underline(VirtualFile file, int lineNumber) {
+        Project project = ProjectManager.getInstance().getOpenProjects()[0];
+        // Get the document for the file
+        Document document = FileDocumentManager.getInstance().getDocument(file);
+        if (document == null) {
+            return;
+        }
+
+        // Create an editor for the document
+        Editor editor = FileEditorManager.getInstance(project).openTextEditor(new OpenFileDescriptor(project, file), true);
+
+        // Get the markup model for the editor
+        MarkupModel markupModel = editor.getMarkupModel();
+        // Get the start and end offsets for the line
+        int startOffset = editor.getDocument().getLineStartOffset(lineNumber - 1);
+        int endOffset = editor.getDocument().getLineEndOffset(lineNumber + 1);
+
+        // set underline style
+        final TextAttributes attr = new TextAttributes();
+        attr.setForegroundColor(JBColor.RED);
+        attr.setEffectColor(JBColor.RED);
+        attr.setEffectType(EffectType.WAVE_UNDERSCORE);
+
+        // Create a range highlighter for the line
+        markupModel.addRangeHighlighter(startOffset, endOffset, HighlighterLayer.SELECTION - 1,
+                attr, HighlighterTargetArea.EXACT_RANGE);
 
         // Save the changes
         FileDocumentManager.getInstance().saveDocument(editor.getDocument());
