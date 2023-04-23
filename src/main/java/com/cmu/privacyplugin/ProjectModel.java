@@ -8,9 +8,7 @@ import com.intellij.openapi.editor.colors.EditorColors;
 import com.intellij.openapi.editor.highlighter.EditorHighlighter;
 import com.intellij.openapi.editor.highlighter.EditorHighlighterFactory;
 import com.intellij.openapi.editor.markup.*;
-import com.intellij.openapi.fileEditor.FileDocumentManager;
-import com.intellij.openapi.fileEditor.FileEditorManager;
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import com.intellij.openapi.fileEditor.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.vfs.LocalFileSystem;
@@ -25,6 +23,7 @@ import java.util.ArrayList;
 public class ProjectModel {
 
     private final String PRIVADO_CODE_PATH = "/app/code";
+    public static RangeHighlighter highlighter;
 
     AnActionEvent event;
     PsiFileIterator psiIterator;
@@ -93,7 +92,7 @@ public class ProjectModel {
         // RangeHighlighter highlighter = markupModel.addRangeHighlighter(startOffset, endOffset, HighlighterLayer.ERROR, null, HighlighterTargetArea.EXACT_RANGE);
 
         // Change the highlighter's color
-        markupModel.addRangeHighlighter(startOffset, endOffset, HighlighterLayer.SELECTION - 1,
+        highlighter = markupModel.addRangeHighlighter(startOffset, endOffset, HighlighterLayer.SELECTION - 1,
                 editor.getColorsScheme().getAttributes(EditorColors.SEARCH_RESULT_ATTRIBUTES), HighlighterTargetArea.EXACT_RANGE);
 
         // Save the changes
@@ -123,7 +122,7 @@ public class ProjectModel {
         attr.setEffectColor(JBColor.GRAY);
         attr.setEffectType(EffectType.WAVE_UNDERSCORE);
 
-        // Create a range highlighter for the line
+        // Create a range highlighter for the line, store the highlighter instance
         markupModel.addRangeHighlighter(startOffset, endOffset, HighlighterLayer.SELECTION - 1,
                 attr, HighlighterTargetArea.EXACT_RANGE);
 
@@ -131,6 +130,21 @@ public class ProjectModel {
         FileDocumentManager.getInstance().saveDocument(editor.getDocument());
     }
 
+    public static void cancelHighlight() {
+        Project project = ProjectManager.getInstance().getOpenProjects()[0];
+        FileEditorManager editorManager = FileEditorManager.getInstance(project);
+        for (FileEditor fileEditor : editorManager.getAllEditors()) {
+            if (fileEditor instanceof TextEditor) {
+                TextEditor textEditor = (TextEditor) fileEditor;
+                Editor editor = textEditor.getEditor();
+                MarkupModel markupModel = editor.getMarkupModel();
+                RangeHighlighter[] highlighters = markupModel.getAllHighlighters();
+                for (RangeHighlighter highlighter : highlighters) {
+                    markupModel.removeHighlighter(highlighter);
+                }
+            }
+        }
+    }
 
     public VirtualFile getCurrentOpenFile() {
         Editor editor = FileEditorManager.getInstance(project).getSelectedTextEditor();
