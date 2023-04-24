@@ -7,6 +7,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
@@ -14,6 +15,8 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+
+
 
 public class PrivadoScanner {
     AnActionEvent event;
@@ -41,8 +44,29 @@ public class PrivadoScanner {
                     // run privado scan to get results
                     TerminalCommand terminal = new TerminalCommand();
                     // terminal.scan(project);
-                    // parse result, mapping to filenameStr and lines array list
+                    terminal.scan_remote(project);
+                    HttpUtility myGet = new HttpUtility();
                     String basePath = event.getProject().getBasePath();
+                    myGet.save(basePath);
+                    long startTime = System.currentTimeMillis();
+                    long endTime;
+                    while(true)
+                    // parse result, mapping to filenameStr and lines array list
+                    {
+                        endTime = System.currentTimeMillis();
+                        if(endTime-startTime > 300000){
+                            startTime = endTime;
+                            try {
+                                if (myGet.sendGET() != 200){
+                                }else{
+                                    break;
+                                }
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
+                        }
+
+                    }
                     lock.lock();
                     try {
                         deserialize(basePath);
