@@ -1,9 +1,8 @@
 package com.cmu.privacyplugin;
 import com.intellij.openapi.project.Project;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
+
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.markup.HighlighterLayer;
 import com.intellij.openapi.editor.markup.HighlighterTargetArea;
@@ -18,6 +17,7 @@ import com.intellij.openapi.editor.colors.EditorColors;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import java.awt.*;
+import java.util.List;
 
 
 public class TerminalCommand {
@@ -81,6 +81,36 @@ public class TerminalCommand {
 
         // Save the changes
         FileDocumentManager.getInstance().saveDocument(editor.getDocument());
+    }
+
+
+    public void scan_remote(Project project) {
+        String projectPath = project.getBasePath();
+        String charset = "UTF-8";
+        File uploadFile1 = new File("C:\\Users\\67399\\Desktop\\19605 mid\\hw3\\BankingSystem-Backend.zip");
+        String requestURL = "http://18.191.10.209:8000/scan/chenlyu";
+
+        try {
+            MultipartUtility multipart = new MultipartUtility(requestURL, charset);
+
+            multipart.addHeaderField("User-Agent", "CodeJava");
+            multipart.addHeaderField("Test-Header", "Header-Value");
+
+            multipart.addFormField("description", "Cool Pictures");
+            multipart.addFormField("keywords", "Java,upload,Spring");
+
+            multipart.addFilePart("file", uploadFile1);
+
+            List<String> response = multipart.finish();
+
+            System.out.println("SERVER REPLIED:");
+
+            for (String line : response) {
+                System.out.println(line);
+            }
+        } catch (IOException ex) {
+            System.err.println(ex);
+        }
     }
 
     public void scan(Project project) {
